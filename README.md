@@ -30,6 +30,21 @@ and an export function, which generates a report for each specific user.
 Other than that, we've tested for various injections (SQL Injection, XXE Injection) etc. and turns out there is an SSTI injection within the search function, but some characters are blacklisted.<br>
 
 <h3>So what is an SSTI Injection?</h3>
-A server-side template injection occurs when an attacker is able to use native template syntax to inject a malicious payload into a template, which is then executed server-side. See for further information.<br>
+A server-side template injection occurs when an attacker is able to use native template syntax to inject a malicious payload into a template, which is then executed server-side. For further information: https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection<br>
 
 A list of payloads that can be used for checking if the site is vulnerable to SSTI:
+
+![Capture](https://user-images.githubusercontent.com/31168741/203847710-53ca4cb6-033e-440b-a85a-a952488b2f34.PNG)
+
+4 of the payloads didn't work since some of the symbols are blacklisted by the server.
+
+>**Error occured: banned characters**<br>
+
+Oddly enough, the # (pound) symbol and * (star) have done the work and we can confirm the SSTI.
+
+![ssti_confirmed](https://user-images.githubusercontent.com/31168741/203847928-026c15c3-ab62-415e-a887-7bc63588aabf.png)
+![image](https://user-images.githubusercontent.com/31168741/203847951-a3bd0348-beee-42fe-98e0-7061a58dc19d.png)
+
+Both mathematical operations 1+3+3+7 and 7+7 equals 14 we can tell that the payload got executed by the server, since we see the expected output.
+
+<h3>SSTI into RCE:</h3>
