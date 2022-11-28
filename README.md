@@ -85,7 +85,7 @@ We run pspy64(snoop unpriviledged Linux processes) to observe. We notice a JAR f
 
 ![image-25](https://user-images.githubusercontent.com/31168741/204232264-1a76f509-48c9-4f65-bdb2-23c479653fcd.png)
 
-We host an HTTP server at port 8000 in /opt/credit-score/LogParser/final/target/ and download the file. Opening the JAR file using jd-gui, it appears that **/opt/panda_search/redpanda.log** is being read in main().
+We host an HTTP server at port 8000 in **/opt/credit-score/LogParser/final/target/** and download the file. Opening the JAR file using **jd-gui**, it appears that **/opt/panda_search/redpanda.log** is being read in main().
 
 ![image-26](https://user-images.githubusercontent.com/31168741/204232850-b2bd1377-acd0-4ff0-881f-7aa4fbcac886.png)
 
@@ -100,7 +100,7 @@ According to the code, there are a few conditions to pass:<br>
 <h3>Create a JPG file and add the author's name</h3>
 • Since the current user does not have WRITE access to /credits, we set the “Artist” value to “../tmp/gg” where our XML exploit will be at /tmp/gg_credits.xml.
 • JPG file should be in a folder where the current user has WRITE access. I used /tmp.
-• Use ExifTool to add the Artist tag with the value “../tmp/gg”: `$exiftool -Artist="../tmp/gg" pe_exploit.jpg`<br>
+• Use ExifTool to add the Artist tag with the value “../tmp/gg”: `$exiftool -Artist="../tmp/gg" pe_exploit.jpg`
 
 ![image](https://user-images.githubusercontent.com/31168741/204234748-65bf3ada-8707-4045-a606-67e107200337.png)
 
